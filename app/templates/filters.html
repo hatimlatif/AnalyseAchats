@@ -1,0 +1,64 @@
+<div class="col-md-3 h-100">
+    <div class="card border-primary w-100 h-100">
+        <div class="card-body">
+            <form method="GET" action="{{ url_for('dashboard') }}">
+                <div class="mb-3">
+                    <label for="date_from" class="form-label">Date de début</label>
+                    <input type="date" class="form-control" id="date_from" name="date_from"
+                           value="{{ request.args.get('date_from', '') }}">
+                </div>
+                <div class="mb-3">
+                    <label for="date_to" class="form-label">Date de fin</label>
+                    <input type="date" class="form-control" id="date_to" name="date_to"
+                           value="{{ request.args.get('date_to', '') }}">
+                </div>
+                <div class="mb-3">
+                    <label for="fournisseur" class="form-label">Fournisseur</label>
+                    <select id="fournisseur" name="fournisseur" class="form-select">
+                        <option value="">-- All --</option>
+                        {% for fournisseur in fournisseurs %}
+                            <option value="{{ fournisseur.CodeFournisseur }}"
+                                    {% if request.args.get('fournisseur') == fournisseur.CodeFournisseur %}selected{% endif %}>
+                                {{ fournisseur.DesignationFournisseur }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="article" class="form-label">Article</label>
+                    <select id="article" name="article" class="form-select">
+                        <option value="">-- All --</option>
+                        {% for produit in produits %}
+                            <option value="{{ produit.DesignationArticle }}"
+                                    {% if request.args.get('article') == produit.Famille %}selected{% endif %}>
+                                {{ produit.Famille }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="montant_min" class="form-label">Montant Achat Min: <span
+                            id="minValue">{{ request.args.get('montant_min', '') }}</span></label>
+                    <input type="range" class="form-range" min="{{ minRange }}" max="{{ maxRange }}"
+                           step="100" id="montant_min"
+                           name="montant_min"
+                           value="{{ request.args.get('montant_min', 0) }}"
+                           oninput="document.getElementById('minValue').innerText = this.value">
+                </div>
+                <div class="mb-3">
+                    <label for="montant_max" class="form-label">Montant Achat Max: <span
+                            id="maxValue">{{ request.args.get('montant_max', '') }}</span></label>
+                    <input type="range" class="form-range" min="{{ minRange }}" max="{{ maxRange }}"
+                           step="100" id="montant_max"
+                           name="montant_max"
+                           value="{{ request.args.get('montant_max', maxRange) }}"
+                           oninput="document.getElementById('maxValue').innerText = this.value">
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm">Appliquer</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-sm">Réinitialiser</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

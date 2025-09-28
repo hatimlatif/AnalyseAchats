@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link href="../static/bootstrap.css" rel="stylesheet">
+    <script src="https://cdn.bokeh.org/bokeh/release/bokeh-3.7.3.min.js"></script>
+    <link href="https://cdn.bokeh.org/bokeh/release/bokeh-3.7.3.min.css" rel="stylesheet">
+    <style>
+        .chart-container {
+            width: 100%;
+            height: 597px;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg bg-primary justify-content-between px-4">
+    <span class="navbar-brand display-5 fw-semibold fs-1 text-white">DASHBOARD</span>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" style="margin: 0" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form class="d-flex" method="GET" action="{{ url_for('logout') }}">
+        <button class="btn btn-outline-danger" type="submit">SE DÉCONNECTER</button>
+    </form>
+</nav>
+<div class="container-fluid p-4">
+    <div class="row" style="height: 85vh;">
+        {% include "filters.html" %}
+        <div class="col-md-9 h-100">
+            <div class="card border-primary w-100 h-100 d-flex flex-column">
+                <div class="card-body" style="overflow-y: auto;">
+                    <div class="container">
+                        <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                            <li class="nav-item dropdown" role="presentation">
+                                <button class="nav-link dropdown-toggle" id="dataDropdown"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    Données
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dataDropdown">
+                                    <li>
+                                        <button class="dropdown-item active" data-bs-toggle="tab"
+                                                data-bs-target="#groupedData" type="button" role="tab"
+                                                aria-controls="groupedData" aria-selected="true">
+                                            Données Regroupées
+                                        </button>
+
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" data-bs-toggle="tab"
+                                                data-bs-target="#detailedData" type="button" role="tab"
+                                                aria-controls="detailedData" aria-selected="false">
+                                            Données Détaillées
+                                        </button>
+                                    </li>
+
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown" role="presentation">
+                                <button class="nav-link dropdown-toggle" id="statsDropdown"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                    Statistiques
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="statsDropdown">
+                                    <li>
+                                        <button class="dropdown-item" data-bs-toggle="tab"
+                                                data-bs-target="#ca-chart"
+                                                type="button" role="tab" aria-controls="ca-chart"
+                                                aria-selected="false">
+                                            CA par Produit
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" data-bs-toggle="tab"
+                                                data-bs-target="#ecarts-chart"
+                                                type="button" role="tab" aria-controls="ecarts-chart"
+                                                aria-selected="false">
+                                            Écarts par Fournisseur
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" data-bs-toggle="tab"
+                                                data-bs-target="#mostsold-chart"
+                                                type="button" role="tab" aria-controls="mostsold-chart"
+                                                aria-selected="false">
+                                            Produits les Plus Vendus
+                                        </button>
+                                    </li>
+                                    <li>
+                                        <button class="dropdown-item" data-bs-toggle="tab"
+                                                data-bs-target="#ecartqt-bp-chart"
+                                                type="button" role="tab" aria-controls="ecartqt-bp-chart"
+                                                aria-selected="false">
+                                            Écart Qt par Fournisseur
+                                        </button>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="tab-content mt-3" id="dashboardTabsContent">
+                            {% include "listeAchats.html" %}
+                            {% include "statistics.html" %}
+                        </div>
+                    </div>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            </div>
+        </div>
+    </div>
+</div>
+{{ script1|safe }}
+{{ script2|safe }}
+{{ script3|safe }}
+{{ script4|safe }}
+</body>
+</html>

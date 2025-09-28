@@ -1,0 +1,128 @@
+<div class="tab-pane fade" id="detailedData" role="tabpanel">
+    <div class="table-responsive rounded border" style="max-height: 597px; overflow-y: auto;">
+        <table class="table table-sm table-hover align-middle">
+            <thead class="table-primary text-nowrap">
+            <tr>
+                <th scope="col">NumBonPese</th>
+                <th scope="col">DesignationArticle</th>
+                <th scope="col">DateBR</th>
+                <th scope="col">CodeF</th>
+                <th scope="col">NomBateau</th>
+                <th scope="col">QteRecue</th>
+                <th scope="col">QteFacturée</th>
+                <th scope="col">Qualite</th>
+                <th scope="col">Moule</th>
+                <th scope="col">PU</th>
+                <th scope="col">MontantAchat</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for achat in achats %}
+                <tr>
+                    <td class="table-light text-nowrap">{{ achat.NumBonPese }}</td>
+                    <td class="table-light text-nowrap">{{ achat.DesignationArticle }}</td>
+                    <td class="table-light text-nowrap">{{ achat.DateBR }}</td>
+                    <td class="table-light text-nowrap">{{ achat.CodeFournisseur }}</td>
+                    <td class="table-light text-nowrap">{{ achat.NomBateau }}</td>
+                    <td class="table-light text-nowrap">{{ "{:,.2f}".format(achat.QteRecue)|replace(",", " ") }}</td>
+                    <td class="table-light text-nowrap">{{ "{:,.2f}".format(achat.QteFacturee)|replace(",", " ") }}</td>
+                    <td class="table-light text-nowrap">{{ achat.Qualite if achat.Qualite!='nan' else 'NULL' }}</td>
+                    <td class="table-light text-nowrap">{{ achat.Moule if achat.Moule!='nan' else 'NULL' }}</td>
+                    <td class="table-light text-nowrap">{{ "{:,.2f}".format(achat.PU)|replace(",", " ") }}</td>
+                    <td class="table-light text-nowrap">{{ "{:,.2f}".format(achat.MontantAchat)|replace(",", " ") }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="tab-pane fade show active" id="groupedData" role="tabpanel">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-3 mb-4">
+
+        <div class="col">
+            <div class="card text-center text-white bg-primary border-primary shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-title">Total Quantité Reçue</h6>
+                    <p class="card-text h5 fw-bold">
+                        {{ "{:,.2f}".format(totalRecu)|replace(",", " ") }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card text-center text-white bg-primary border-primary shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-title">Total Quantité Facturée</h6>
+                    <p class="card-text h5 fw-bold">
+                        {{ "{:,.2f}".format(totalFacture)|replace(",", " ") }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            {% set q_class = 'text-danger' if TotalEcartQ < 0 else 'text-success' %}
+            <div class="card text-center text-white bg-primary border-{{ 'danger' if TotalEcartQ < 0 else 'success' }} shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-title">Total Écart Quantité</h6>
+                    <p class="card-text h5 {{ q_class }} fw-bold">
+                        {{ "{:,.2f}".format(TotalEcartQ)|replace(",", " ") }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            {% set m_class = 'text-danger' if TotalEcartM < 0 else 'text-success' %}
+            <div class="card text-center text-white bg-primary border-{{ 'danger' if TotalEcartM < 0 else 'success' }} shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-title">Total Écart Montant</h6>
+                    <p class="card-text h5 {{ m_class }} fw-bold">
+                        {{ "{:,.2f}".format(TotalEcartM)|replace(",", " ") }}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card text-center text-white bg-primary border-info shadow-sm h-100">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <h6 class="card-title">Total Payé</h6>
+                    <p class="card-text h5 fw-bold">
+                        {{ "{:,.2f}".format(totalPaye)|replace(",", " ") }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="table-responsive rounded border" style="max-height: 455px; overflow-y: auto;">
+        <table class="table table-sm table-hover align-middle">
+            <thead class="table-primary text-nowrap">
+            <tr>
+                <th scope="col">NumBonPese</th>
+                <th scope="col">DateBR</th>
+                <th scope="col">CodeFournisseur</th>
+                <th scope="col">NomBateau</th>
+                <th scope="col">EcartQuantité</th>
+                <th scope="col">EcartMontant</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for achat in achatsBP %}
+                <tr>
+                    <td class="table-light text-nowrap">{{ achat.NumBonPese }}</td>
+                    <td class="table-light text-nowrap">{{ achat.DateBR }}</td>
+                    <td class="table-light text-nowrap">{{ achat.CodeFournisseur }}</td>
+                    <td class="table-light text-nowrap">{{ achat.NomBateau }}</td>
+                    {% set q_class = 'text-danger' if achat.EcartQt < 0 else 'text-success' %}
+                    <td class="table-light text-nowrap {{ q_class }} fw-bold">{{ "{:.2f}".format(achat.EcartQt) }}</td>
+                    {% set m_class = 'text-danger' if achat.EcartMontant < 0 else 'text-success' %}
+                    <td class="table-light text-nowrap {{ m_class }} fw-bold">{{ "{:.2f}".format(achat.EcartMontant) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

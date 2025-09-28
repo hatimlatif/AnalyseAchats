@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rapport</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #2c3e50;
+        }
+
+        .summary {
+            margin-bottom: 20px;
+        }
+
+        .summary p {
+            margin: 4px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Rapport d’Achats</h1>
+<p>Date de génération : {{ date }}</p>
+
+<div class="summary">
+    <h2>Statistiques</h2>
+    <p><strong>Nombre total d'achats :</strong> {{ achats|length }}</p>
+    <p><strong>Montant total :</strong> {{ total | default(0) | round(2) }} DH</p>
+
+    <h3>3 Produits les Plus Vendus</h3>
+    <ul>
+        {% for produit, qte in top_3 %}
+            <li>{{ produit }} — {{ qte  | round(2) }} unités</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<h2>Détails des Achats</h2>
+<table>
+    <thead>
+    <tr>
+        <th>Produit</th>
+        <th>Fournisseur</th>
+        <th>Quantité Reçue</th>
+        <th>Quantité Facturée</th>
+        <th>Montant</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for achat in achats %}
+        <tr>
+            <td>{{ achat.DesignationArticle }}</td>
+            <td>{{ achat.CodeFournisseur }}</td>
+            <td>{{ "%.2f"|format(achat.QteRecue) }}</td>
+            <td>{{ "%.2f"|format(achat.QteFacturee) }}</td>
+            <td>{{ "%.2f"|format(achat.MontantAchat) }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+</body>
+</html>
